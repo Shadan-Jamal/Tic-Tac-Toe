@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 body{
-    height: 100vh;
-    width: 100vw;
+    width:100vw;
+    height:100vh;
     background-image: radial-gradient(circle, #874f6f, #90537c, 
     #99588a, #a05e99, #a664a9, #a260a8, #9e5ba7, 
     #9a57a6, #8c4694, #7e3682, #712570, #63115f);
