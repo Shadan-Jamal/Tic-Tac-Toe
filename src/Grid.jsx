@@ -4,14 +4,47 @@ import Block from './Block';
 function Grid() {
   const [turn,setTurn] = useState(true);
   const [shapes,setShapes] = useState(Array(9).fill(null));
+  const [turnText,setTurnText] = useState("X's Turn to play.");
 
   const handleClick = (i) =>{
+    if(checkWinner(shapes) || shapes[i])
+      return;
+    else if(!shapes.includes(null))
+      setTurnText(()=>'It is a draw');
     const nextShapes = shapes.slice();
     if(shapes[i] == null){
       nextShapes[i] = turn ? 'X' : 'O';
       setShapes(nextShapes);
+      console.log(nextShapes);
       setTurn(!turn);
+      console.log(turn);
     }
+    console.log(turn);
+    const winner = checkWinner(shapes);
+    if(winner)
+      setTurnText(`The winner is ${winner} !!`);
+    else
+      turn ? setTurnText("O's Turn to play.") : setTurnText("X's Turn to play.");
+  }
+
+  const checkWinner = (shapes) => {
+    const winnerBlocks = [
+      [0,1,2],
+      [3,4,5],
+      [6,7,8],
+      [0,3,6],
+      [1,4,7],
+      [2,5,8],
+      [0,4,8],
+      [2,4,7]
+    ];
+
+    for(let i=0;i<winnerBlocks.length;i++){
+      const [a,b,c] = winnerBlocks[i];
+      if(shapes[a] && shapes[a] === shapes[b] && shapes[a] === shapes[c])
+        return shapes[a];
+    }
+    return null;
   }
 
   return (
@@ -32,9 +65,9 @@ function Grid() {
       })}
     </div>
 
-    {<p className='text-red-50 font-serif font-extrabold text-xl lg:text-4xl drop-shadow-2xl rounded-lg col-span-3 row-span-3 absolute bottom-44 left-[620px]'>
-      {turn ? "Player X's turn" : "Player O's turn"}
-    </p>}
+    {<div className='text-red-50 font-serif font-extrabold text-xl lg:text-4xl drop-shadow-2xl rounded-lg col-span-3 row-span-3 absolute bottom-44 left-[620px]'>
+      {<p>{turnText}</p>}
+    </div>}
     </>
   )
 }
