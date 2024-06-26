@@ -1,33 +1,32 @@
-import React,{ useState } from 'react';
+import React,{ useEffect, useState } from 'react';
 import Block from './Block';
 
 function Grid() {
+  const [turnText,setTurnText] = useState("X's Turn to play.");
   const [turn,setTurn] = useState(true);
   const [shapes,setShapes] = useState(Array(9).fill(null));
-  const [turnText,setTurnText] = useState("X's Turn to play.");
 
   const handleClick = (i) =>{
-    if(checkWinner(shapes) || shapes[i])
+    const winner = checkWinner(shapes);
+    if(shapes[i] || checkWinner(shapes)){
+      setTurnText(`The winner is ${winner} !!`);
       return;
-    else if(!shapes.includes(null))
-      setTurnText(()=>'It is a draw');
+    }
+    // else if(!shapes.includes(null))
+    //   setTurnText(()=>'It is a draw');
     const nextShapes = shapes.slice();
     if(shapes[i] == null){
       nextShapes[i] = turn ? 'X' : 'O';
       setShapes(nextShapes);
-      console.log(nextShapes);
       setTurn(!turn);
-      console.log(turn);
     }
-    console.log(turn);
-    const winner = checkWinner(shapes);
-    if(winner)
-      setTurnText(`The winner is ${winner} !!`);
-    else
+    if(!winner){
       turn ? setTurnText("O's Turn to play.") : setTurnText("X's Turn to play.");
+    }
   }
-
-  const checkWinner = (shapes) => {
+  
+  
+  function checkWinner(shapes) {
     const winnerBlocks = [
       [0,1,2],
       [3,4,5],
@@ -38,7 +37,7 @@ function Grid() {
       [0,4,8],
       [2,4,7]
     ];
-
+    
     for(let i=0;i<winnerBlocks.length;i++){
       const [a,b,c] = winnerBlocks[i];
       if(shapes[a] && shapes[a] === shapes[b] && shapes[a] === shapes[c])
@@ -46,7 +45,10 @@ function Grid() {
     }
     return null;
   }
-
+  
+  // useEffect(() => {
+  //   console.log(checkWinner);
+  // },[checkWinner])
   return (
     <>
     <nav className='fixed top-0 w-screen text-center'>
@@ -55,12 +57,11 @@ function Grid() {
     <div className='grid grid-cols-3 grid-rows-3 place-content-evenly place-items-stretch p-6 h-96 w-96 absolute inset-0 m-auto'>
       {
       shapes.map((shape,index) =>{
-        return <div className='h-28 w-28 border-2 border-white'>
+        return <div key={index} className='h-28 w-28 border-2 border-white'>
         <Block 
         key={index} 
         shape={shape} 
-        onBlockClick={() => handleClick(index)
-      } />
+        onBlockClick={() => handleClick(index)} />
       </div>
       })}
     </div>
