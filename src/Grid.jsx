@@ -7,13 +7,13 @@ function Grid() {
   const [shapes,setShapes] = useState(Array(9).fill(null));
 
   const handleClick = (i) =>{
+    if(shapes[i] != null)
+      setTurnText(()=>'It is a draw');
     const winner = checkWinner(shapes);
     if(shapes[i] || checkWinner(shapes)){
       setTurnText(`The winner is ${winner} !!`);
       return;
     }
-    // else if(!shapes.includes(null))
-    //   setTurnText(()=>'It is a draw');
     const nextShapes = shapes.slice();
     if(shapes[i] == null){
       nextShapes[i] = turn ? 'X' : 'O';
